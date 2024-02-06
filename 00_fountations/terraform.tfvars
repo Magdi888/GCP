@@ -27,4 +27,5 @@ minnode = 3
 maxnode = 6
 initial_node_count = 3
 disksize = 50
-disk_type = pd-standard 
+disk_type = "pd-standard"
+k8s_version = "1.29"

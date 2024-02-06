@@ -76,3 +76,7 @@ variable "initial_node_count" {
 variable "disk_type" {
   type = string
  }
+
+ variable "k8s_version" {
+  type = string
+ }
