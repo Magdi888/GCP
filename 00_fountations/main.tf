@@ -1,35 +1,4 @@
-module "vpc" {
-    source  = "terraform-google-modules/network/google"
-    version = "~> 9.0"
 
-    project_id   = var.project_id
-    network_name = "${var.vpc_name}-${var.env_name}"
-    routing_mode = "GLOBAL"
-
-    subnets = [
-        {
-            subnet_name           = "${var.subnets[0]}-${var.env_name}"
-            subnet_ip             = var.subnet_cidr[0]
-            subnet_region         = var.region
-        },
-       
-    ]
-
-    secondary_ranges = {
-        "${var.subnets[0]}-${var.env_name}" = [
-            {
-                range_name    = var.ip_range_pods_name
-                ip_cidr_range = var.ip_range_pods
-            },
-            {
-                range_name    = var.ip_range_services_name
-                ip_cidr_range = var.ip_range_services
-            }
-        ]
-    }
-
-
-}
 
 
 module "gke" {
@@ -53,6 +22,7 @@ module "gke" {
   enable_private_endpoint    = true
   enable_private_nodes       = true
   remove_default_node_pool   = true
+  deletion_protection        = false
   master_authorized_networks	 = [{ cidr_block = var.subnet_cidr[0] 
                                       display_name = "Main Office"
                                     }]
