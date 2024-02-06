@@ -52,3 +52,27 @@ variable "ip_range_services" {
 }
 
 
+variable "machine_type" {
+  type = string
+  default = "n2-standard-2"
+}
+
+variable "minnode" {
+  type = number
+}
+
+variable "maxnode" {
+  type = number
+}
+
+variable "disksize" {
+  type = number
+}
+
+variable "initial_node_count" {
+  type = number 
+}
+
+variable "disk_type" {
+  type = string
+ }

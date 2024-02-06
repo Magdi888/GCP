@@ -22,4 +22,9 @@ ip_range_services_name  = "ip-range-services"
 
 ip_range_services = "10.30.0.0/16"
 
-
+machine_type = "n2-standard-2"
+minnode = 3
+maxnode = 6
+initial_node_count = 3
+disksize = 50
+disk_type = pd-standard 
