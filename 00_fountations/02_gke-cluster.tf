@@ -16,7 +16,7 @@ module "gke" {
   filestore_csi_driver          = false
   grant_registry_access         = true
   master_ipv4_cidr_block        = "10.0.0.0/28"
-  enable_private_endpoint       = true
+  enable_private_endpoint       = false
   enable_private_nodes          = true
   remove_default_node_pool      = true
   deletion_protection           = false
@@ -24,6 +24,9 @@ module "gke" {
   master_authorized_networks = [
     { cidr_block   = var.subnet_cidr[0]
       display_name = "Main Office"
+    },
+    { cidr_block = "41.65.83.130/32"
+      display_name = "Devops"
     },
   ]
   node_pools = [

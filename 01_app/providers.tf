@@ -30,6 +30,8 @@ provider "google" {
 data "google_client_config" "default" {
 }
 
+data "google_servi"
+
 data "google_container_cluster" "default" {
   name     = "${var.cluster_name}-${var.env_name}"
   location = var.zones[0]
