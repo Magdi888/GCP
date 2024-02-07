@@ -20,9 +20,13 @@ module "gke" {
   enable_private_nodes       = true
   remove_default_node_pool   = true
   deletion_protection        = false
-  master_authorized_networks	 = [{ cidr_block = var.subnet_cidr[0] 
+  master_authorized_networks	 = [
+                                    { cidr_block = var.subnet_cidr[0] 
                                       display_name = "Main Office"
-                                    }]
+                                    },
+                                    { cidr_block = "41.65.83.130/32"
+                                      display_name = "DevOps" },
+                                    ]
   node_pools = [
     {
       name           = "node-pool"
