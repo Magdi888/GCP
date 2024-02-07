@@ -93,4 +93,6 @@ variable "bootdisk_size" {
   type = string
 }
 
- 
+variable "Devops_cidr" {
+  type = string
+}

@@ -25,7 +25,7 @@ module "gke" {
     { cidr_block   = var.subnet_cidr[0]
       display_name = "Main Office"
     },
-    { cidr_block = "41.65.83.130/32"
+    { cidr_block   = var.Devops_cidr
       display_name = "Devops"
     },
   ]
