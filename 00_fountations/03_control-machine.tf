@@ -25,8 +25,8 @@ resource "google_compute_instance" "manager-instance" {
 
   boot_disk {
     initialize_params {
-      size = var.bootdisk_size
-      type = var.bootdisk_type
+      size  = var.bootdisk_size
+      type  = var.bootdisk_type
       image = data.google_compute_image.image.self_link
     }
   }
@@ -37,13 +37,13 @@ resource "google_compute_instance" "manager-instance" {
   }
 
   network_interface {
-    network = module.vpc.network_name
-    subnetwork =  module.vpc.subnets_names[0]
+    network    = module.vpc.network_name
+    subnetwork = module.vpc.subnets_names[0]
 
-    
+
   }
 
-  
+
   service_account {
     email  = google_service_account.manager_service_account.email
     scopes = ["cloud-platform"]
@@ -52,6 +52,6 @@ resource "google_compute_instance" "manager-instance" {
 
   metadata_startup_script = file("./config_control.sh")
 
-  
+
 
 }

@@ -1,13 +1,13 @@
 variable "project_id" {
-    type = string
+  type = string
 }
 
 variable "region" {
-    type = string
+  type = string
 }
 
 variable "zones" {
-    type = list(string)
+  type = list(string)
 }
 
 variable "cluster_name" {

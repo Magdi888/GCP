@@ -1,26 +1,26 @@
 variable "project_id" {
-    type = string
+  type = string
 }
 
 variable "region" {
-    type = string
+  type = string
 }
 
 variable "zones" {
-    type = list(string)
+  type = list(string)
 }
 
 variable "vpc_name" {
-    type = string
+  type = string
 }
 
 variable "subnets" {
-    type = list(string)
-    
+  type = list(string)
+
 }
 variable "subnet_cidr" {
-    type = list(string)
-    default = ["10.10.0.0/16"]  // Default to single subnet with /16 cidr if not provided
+  type    = list(string)
+  default = ["10.10.0.0/16"] // Default to single subnet with /16 cidr if not provided
 }
 
 variable "cluster_name" {
@@ -53,7 +53,7 @@ variable "ip_range_services" {
 
 
 variable "machine_type" {
-  type = string
+  type    = string
   default = "n2-standard-2"
 }
 
@@ -70,27 +70,27 @@ variable "disksize" {
 }
 
 variable "initial_node_count" {
-  type = number 
+  type = number
 }
 
 variable "disk_type" {
   type = string
- }
+}
 
- variable "k8s_version" {
+variable "k8s_version" {
   type = string
- }
+}
 
- variable "control_machine_type" {
+variable "control_machine_type" {
   type = string
- }
+}
 
- variable "bootdisk_type" {
+variable "bootdisk_type" {
   type = string
- }
+}
 
- variable "bootdisk_size" {
+variable "bootdisk_size" {
   type = string
- }
+}
 
  

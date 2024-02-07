@@ -1,30 +1,30 @@
 terraform {
   required_providers {
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = "5.14.0"
     }
     kubernetes = {
-      source = "hashicorp/kubernetes"
+      source  = "hashicorp/kubernetes"
       version = "2.25.2"
     }
     helm = {
-      source = "hashicorp/helm"
+      source  = "hashicorp/helm"
       version = "2.12.1"
     }
   }
   backend "gcs" {
-    bucket  = "backendstate"
-    prefix  = "terraform/00_app"
+    bucket = "backendstate"
+    prefix = "terraform/00_app"
   }
 }
 
 
 
 provider "google" {
-  project = var.project_id
+  project     = var.project_id
   credentials = file("/home/ahmed/.config/gcloud/application_default_credentials.json")
-  region  = var.region
+  region      = var.region
 }
 
 data "google_client_config" "default" {
