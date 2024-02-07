@@ -37,7 +37,7 @@ resource "google_compute_instance" "manager-instance" {
   }
 
   network_interface {
-    network = module.vpc.name
+    network = module.vpc.network_name
     subnetwork =  module.vpc.subnets[0].subnet_name
 
     
@@ -50,7 +50,7 @@ resource "google_compute_instance" "manager-instance" {
   }
   depends_on = [module.vpc, module.gke]
 
-  metadata_startup_script = file("./config_gcloud.sh")
+  metadata_startup_script = file("./config_control.sh")
 
   
 
