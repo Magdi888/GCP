@@ -1,6 +1,6 @@
 data "google_compute_image" "image" {
   family  = "debian-12"
-  project = var.project_id
+  project = "debian-cloud"
 }
 
 resource "google_service_account" "manager_service_account" {
@@ -38,7 +38,7 @@ resource "google_compute_instance" "manager-instance" {
 
   network_interface {
     network = module.vpc.network_name
-    subnetwork =  module.vpc.subnets[0].subnet_name
+    subnetwork =  module.vpc.subnets_names[0]
 
     
   }
