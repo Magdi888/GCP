@@ -80,3 +80,17 @@ variable "disk_type" {
  variable "k8s_version" {
   type = string
  }
+
+ variable "control_machine_type" {
+  type = string
+ }
+
+ variable "bootdisk_type" {
+  type = string
+ }
+
+ variable "bootdisk_size" {
+  type = string
+ }
+
+ 

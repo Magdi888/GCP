@@ -9,5 +9,5 @@ resource "google_compute_firewall" "ssh" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-
+  target_tags = ["managed-instance"]
 }

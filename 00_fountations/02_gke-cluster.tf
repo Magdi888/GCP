@@ -1,6 +1,3 @@
-
-
-
 module "gke" {
   source            = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
   project_id        = var.project_id
@@ -48,6 +45,10 @@ module "gke" {
       "https://www.googleapis.com/auth/cloud-platform",
     ]
   }
+   node_pools_tags = {
+    all = ["gke-nodes",]
+   }
+
 }
 
 resource "google_service_account" "gke_service_account" {
