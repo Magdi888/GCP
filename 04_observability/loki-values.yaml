@@ -1,0 +1,102 @@
+
+enabled: false
+distributor:
+  replicas: 1
+queryFrontend:
+  replicas: 1
+gateway:
+  nginxConfig:
+    httpSnippet: |-
+            client_max_body_size 100M;
+    serverSnippet: |-
+            client_max_body_size 100M;
+  replicas: 1
+  basicAuth:
+    enabled: false
+customParams:
+  gcsBucket: loki-logging
+ingester:
+  replicas: 1
+  persistence:
+    enabled: true
+    claims:
+      - name: data
+        size: 10Gi
+querier:
+  replicas: 1
+  persistence:
+    enabled: true
+    size: 10Gi
+serviceAccount:
+  create: true
+  name: loki
+loki:
+  config: |
+      auth_enabled: false
+      schema_config:
+        configs:
+          - from: 2020-09-07
+            store: boltdb-shipper
+            object_store: gcs
+            schema: v12
+            index:
+              prefix: loki_index_
+              period: 24h
+      ingester:
+        lifecycler:
+          ring:
+            kvstore:
+              store: memberlist
+            replication_factor: 1
+        chunk_idle_period: 10m
+        chunk_block_size: 262144
+        chunk_encoding: snappy
+        chunk_retain_period: 1m
+        max_transfer_retries: 0
+        wal:
+          dir: /var/loki/wal
+      limits_config:
+        enforce_metric_name: false
+        reject_old_samples: true
+        reject_old_samples_max_age: 168h
+        max_cache_freshness_per_query: 10m
+        retention_period: 2160h
+        split_queries_by_interval: 15m
+      storage_config:
+        gcs:
+          bucket_name: {{ .Values.customParams.gcsBucket }}
+        boltdb_shipper:
+          active_index_directory: /var/loki/boltdb-shipper-active
+          cache_location: /var/loki/boltdb-shipper-cache
+          cache_ttl: 24h
+          shared_store: gcs
+      chunk_store_config:
+        max_look_back_period: 0s
+      table_manager:
+        retention_deletes_enabled: true
+        retention_period: 2160h
+      query_range:
+        align_queries_with_step: true
+        max_retries: 5
+        cache_results: true
+        results_cache:
+          cache:
+            enable_fifocache: true
+            fifocache:
+              max_size_items: 1024
+              validity: 24h
+      compactor:
+        shared_store: gcs
+        retention_enabled: true
+        retention_delete_delay: 2h
+        retention_delete_worker_count: 150
+        compaction_interval: 10m
+      ruler:
+        storage:
+          type: local
+          local:
+            directory: /etc/loki/rules
+        ring:
+          kvstore:
+            store: memberlist
+        rule_path: /tmp/loki/scratch
