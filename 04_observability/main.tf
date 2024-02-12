@@ -42,7 +42,7 @@ resource "helm_release" "prometheus" {
       additionalDataSources:
         - name: Loki
           type: loki
-          url: http://loki-loki-distributed-query-frontend.monitoring:3100
+          url: http://loki-query-frontend.monitoring:3100
     YAML
   ]
 }
@@ -50,6 +50,7 @@ resource "helm_release" "prometheus" {
 resource "google_storage_bucket" "logging" {
   name = "loki-for-logging"
   location = "US"
+  force_destroy = true
 }
 
 resource "google_service_account" "logging_service_account" {
@@ -98,7 +99,7 @@ resource "helm_release" "loki" {
   values = [
     "${file("loki-values.yaml")}"
   ]
-  depends_on = [ google_storage_bucket_iam_member.logging, google_service_account.logging_service_account, google_storage_bucket.logging ]
+  depends_on = [ google_storage_bucket_iam_member.logging, google_service_account.logging_service_account, google_storage_bucket.logging, helm_release.prometheus]
 }
 
 resource "helm_release" "promtail" {
@@ -115,7 +116,8 @@ resource "helm_release" "promtail" {
     config:
       serverPort: 8080
       clients:
-        - url: http://loki-loki-distributed-gateway/loki/api/v1/push
+        - url: http://loki-gateway/loki/api/v1/push
     YAML
   ]
+  depends_on = [ helm_release.prometheus]
 }

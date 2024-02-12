@@ -1,15 +1,17 @@
-
+fullnameOverride: loki
 enabled: false
+tableManager:
+  enabled: true
 distributor:
   replicas: 1
 queryFrontend:
   replicas: 1
 gateway:
-  nginxConfig:
-    httpSnippet: |-
-            client_max_body_size 100M;
-    serverSnippet: |-
-            client_max_body_size 100M;
+  # nginxConfig:
+  #   httpSnippet: |-
+  #           client_max_body_size 100M;
+  #   serverSnippet: |-
+  #           client_max_body_size 100M;
   replicas: 1
   basicAuth:
     enabled: false
@@ -37,12 +39,19 @@ loki:
       common:
         compactor_address: {{ include "loki.compactorFullname" . }}:3100
       auth_enabled: false
+      distributor:
+        ring:
+          kvstore:
+            store: memberlist
+      memberlist:
+        join_members:
+          - {{ include "loki.fullname" . }}-memberlist
       schema_config:
         configs:
           - from: 2020-09-07
             store: boltdb-shipper
             object_store: gcs
-            schema: v12
+            schema: v11
             index:
               prefix: loki_index_
               period: 24h
@@ -89,6 +98,13 @@ loki:
             fifocache:
               max_size_items: 1024
               validity: 24h
+      frontend_worker:
+        frontend_address: {{ include "loki.queryFrontendFullname" . }}:9095
+
+      frontend:
+        log_queries_longer_than: 5s
+        compress_responses: true
+        tail_proxy_url: http://{{ include "loki.querierFullname" . }}:3100
       compactor:
         shared_store: gcs
         retention_enabled: true
