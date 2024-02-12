@@ -19,3 +19,6 @@ variable "env_name" {
   default     = "dev"
 }
 
+variable "observability-namespace" {
+  type = string
+}

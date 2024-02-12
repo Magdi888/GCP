@@ -14,7 +14,7 @@ gateway:
   basicAuth:
     enabled: false
 customParams:
-  gcsBucket: loki-logging
+  gcsBucket: loki-for-logging
 ingester:
   replicas: 1
   persistence:
@@ -29,9 +29,13 @@ querier:
     size: 10Gi
 serviceAccount:
   create: true
-  name: loki
+  name: loki-sa
+  annotations:
+    iam.gke.io/gcp-service-account: loki-sa@gitops-project-408111.iam.gserviceaccount.com
 loki:
   config: |
+      common:
+        compactor_address: {{ include "loki.compactorFullname" . }}:3100
       auth_enabled: false
       schema_config:
         configs:

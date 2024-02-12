@@ -48,12 +48,12 @@ resource "helm_release" "prometheus" {
 }
 
 resource "google_storage_bucket" "logging" {
-  name = "loki-logging"
+  name = "loki-for-logging"
   location = "US"
 }
 
 resource "google_service_account" "logging_service_account" {
-  account_id   = "loki"
+  account_id   = "loki-sa"
   display_name = "logging_service_account"
 }
 
@@ -64,18 +64,27 @@ resource "google_storage_bucket_iam_member" "logging" {
   depends_on = [ google_service_account.logging_service_account, google_storage_bucket.logging ]
 }
 
-module "loki-workload-identity" {
-  source              = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  name                = "loki"
-  namespace           = "monitoring"
-  use_existing_k8s_sa = true
-  use_existing_gcp_sa = true
-  cluster_name        = "${var.cluster_name}-${var.env_name}"
-  location            = var.zones[0]
-  project_id          = var.project_id
-  annotate_k8s_sa     = true
-  module_depends_on   = [helm_release.loki, google_storage_bucket_iam_member.logging, google_service_account.logging_service_account, google_storage_bucket.logging]
+resource "google_project_iam_member" "workload-identity-role" {
+  project = var.project_id
+  role    = "roles/iam.workloadIdentityUser"
+  member  = "serviceAccount:${var.project_id}.svc.id.goog[${var.observability-namespace}/loki-sa]"
+  depends_on = [ google_service_account.logging_service_account, google_storage_bucket_iam_member.logging ]
 }
+
+# module "loki-workload-identity" {
+#   source              = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
+#   name                = google_service_account.logging_service_account.account_id
+#   namespace           = "monitoring"
+#   use_existing_k8s_sa = true
+#   use_existing_gcp_sa = true
+#   cluster_name        = "${var.cluster_name}-${var.env_name}"
+#   location            = var.zones[0]
+#   project_id          = var.project_id
+#   annotate_k8s_sa     = true
+#   module_depends_on   = [helm_release.loki]
+#   depends_on = [ google_service_account.logging_service_account ]
+
+# }
 
 resource "helm_release" "loki" {
   name       = "loki"
@@ -97,7 +106,7 @@ resource "helm_release" "promtail" {
   namespace  = "monitoring"
   repository = "https://grafana.github.io/helm-charts"
   chart      = "promtail"
-  version    = "1"
+  version    = "6.15.5"
   timeout    = 300
   atomic     = true
   verify     = false
