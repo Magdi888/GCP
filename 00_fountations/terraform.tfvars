@@ -1,6 +1,6 @@
 
 # Global Variables
-project_id  = "gitops-project-408111"
+project_id  = "gitops-project-415809"
 region      = "us-central1"
 zones       = ["us-central1-a", "us-central1-b"]
 vpc_name    = "vpc"
