@@ -15,7 +15,7 @@ terraform {
   }
   backend "gcs" {
     bucket = "backendstate"
-    prefix = "terraform/00_app"
+    prefix = "terraform/01_platform"
   }
 }
 
